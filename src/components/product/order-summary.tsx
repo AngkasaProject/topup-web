@@ -1,21 +1,29 @@
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-};
+import { Product } from "@/types/product";
 
 interface OrderSummaryProps {
-  game: string;
+  serviceName: string;
+
   userId: string;
+
   serverId: string;
+
   product: Product | null;
+
+  paymentMethod: string;
+
+  email: string;
+
+  whatsapp: string;
 }
 
 export function OrderSummary({
-  game,
+  serviceName,
   userId,
   serverId,
   product,
+  paymentMethod,
+  email,
+  whatsapp,
 }: OrderSummaryProps) {
   return (
     <div
@@ -32,31 +40,19 @@ export function OrderSummary({
       <h2 className="mb-6 text-xl font-semibold">Detail Pesanan</h2>
 
       <div className="space-y-4">
-        <div>
-          <p className="text-sm text-muted-foreground">Produk</p>
+        <SummaryItem label="Produk" value={serviceName || "-"} />
 
-          <p className="font-medium">{game || "-"}</p>
-        </div>
+        <SummaryItem label="Tujuan" value={userId || "-"} />
 
-        <div>
-          <p className="text-sm text-muted-foreground">Tujuan</p>
+        {serverId && <SummaryItem label="Server" value={serverId} />}
 
-          <p className="font-medium">{userId || "-"}</p>
-        </div>
+        <SummaryItem label="Nominal" value={product?.name || "-"} />
 
-        {serverId && (
-          <div>
-            <p className="text-sm text-muted-foreground">Server</p>
+        <SummaryItem label="Pembayaran" value={paymentMethod || "-"} />
 
-            <p className="font-medium">{serverId}</p>
-          </div>
-        )}
+        <SummaryItem label="Email" value={email || "-"} />
 
-        <div>
-          <p className="text-sm text-muted-foreground">Nominal</p>
-
-          <p className="font-medium">{product?.name || "-"}</p>
-        </div>
+        <SummaryItem label="WhatsApp" value={whatsapp || "-"} />
       </div>
 
       <div className="my-6 border-t" />
@@ -68,6 +64,16 @@ export function OrderSummary({
           Rp {product?.price.toLocaleString("id-ID") || "0"}
         </span>
       </div>
+    </div>
+  );
+}
+
+function SummaryItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-sm text-muted-foreground">{label}</p>
+
+      <p className="font-medium break-words">{value}</p>
     </div>
   );
 }

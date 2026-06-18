@@ -1,0 +1,11 @@
+{
+  "name": "agks-online",
+  "compatibility_date": "2026-06-17",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "agks-db",
+      "database_id": "207a745c-07fe-4104-ae56-9afb74ad2ba0",
+    },
+  ],
+}

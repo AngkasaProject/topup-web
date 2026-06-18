@@ -28,9 +28,7 @@ export function ProductGrid() {
             <div className="p-4">
               <h3 className="font-semibold">{item.name}</h3>
 
-              <p className="text-sm text-muted-foreground">
-                {item.products} Produk
-              </p>
+              <p className="text-sm text-muted-foreground">Layanan Digital</p>
             </div>
           </Link>
         ))}

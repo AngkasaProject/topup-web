@@ -1,22 +1,14 @@
 "use client";
 
 import { useState } from "react";
+
 import { OrderSummary } from "./order-summary";
 import { PaymentBar } from "./payment-bar";
 
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-};
-
-type Service = {
-  id: number;
-  slug: string;
-  name: string;
-  category: string;
-  inputType: string;
-};
+import { PaymentMethods } from "@/components/payment/payment-methods";
+import { ContactForm } from "@/components/payment/contact-form";
+import { Product } from "@/types/product";
+import { Service } from "@/types/service";
 
 interface ProductDetailProps {
   service: Service | undefined;
@@ -29,25 +21,78 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
+  const [selectedMethod, setSelectedMethod] = useState("");
+
+  const [email, setEmail] = useState("");
+
+  const [whatsapp, setWhatsapp] = useState("");
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-6 pb-32">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">{service?.name}</h1>
+      {/* HERO */}
 
-        <p className="mt-2 text-muted-foreground">
-          Pilih produk dan masukkan data tujuan.
-        </p>
+      <div className="mb-8 overflow-hidden rounded-3xl border">
+        <img
+          src={service?.banner || "https://placehold.co/1200x300"}
+          alt={service?.name}
+          className="
+            h-40
+            w-full
+            object-cover
+            md:h-56
+          "
+        />
+
+        <div className="p-6">
+          <div className="flex items-center gap-4">
+            <img
+              src={service?.logo || "https://placehold.co/120x120"}
+              alt={service?.name}
+              className="
+                h-16
+                w-16
+                rounded-2xl
+                border
+                object-cover
+              "
+            />
+
+            <div>
+              <h1 className="text-3xl font-bold">{service?.name}</h1>
+
+              <div className="mt-2 flex flex-wrap gap-2">
+                {service?.badges?.map((badge) => (
+                  <span
+                    key={badge}
+                    className="
+                        rounded-full
+                        bg-orange-100
+                        px-3
+                        py-1
+                        text-sm
+                        text-orange-600
+                      "
+                  >
+                    {badge}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <p className="mt-4 text-muted-foreground">{service?.description}</p>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* KIRI */}
+        {/* CONTENT */}
+
         <div className="space-y-6 lg:col-span-2">
           {/* STEP 1 */}
+
           <div className="rounded-2xl border p-6">
             <h2 className="mb-4 text-xl font-semibold">1. Data Tujuan</h2>
 
-            {/* MOBILE LEGENDS */}
             {service?.inputType === "userid-server" && (
               <>
                 <input
@@ -77,7 +122,6 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
               </>
             )}
 
-            {/* FREE FIRE */}
             {service?.inputType === "userid" && (
               <input
                 value={userId}
@@ -92,7 +136,6 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
               />
             )}
 
-            {/* PULSA */}
             {service?.inputType === "phone" && (
               <input
                 value={userId}
@@ -107,7 +150,6 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
               />
             )}
 
-            {/* PLN */}
             {service?.inputType === "customer-id" && (
               <input
                 value={userId}
@@ -124,6 +166,7 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
           </div>
 
           {/* STEP 2 */}
+
           <div className="rounded-2xl border p-6">
             <h2 className="mb-4 text-xl font-semibold">2. Pilih Nominal</h2>
 
@@ -155,23 +198,47 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
               ))}
             </div>
           </div>
+
+          {/* STEP 3 */}
+
+          <PaymentMethods
+            selectedMethod={selectedMethod}
+            onSelect={setSelectedMethod}
+          />
+
+          {/* STEP 4 */}
+
+          <ContactForm
+            email={email}
+            whatsapp={whatsapp}
+            setEmail={setEmail}
+            setWhatsapp={setWhatsapp}
+          />
         </div>
 
         {/* SIDEBAR */}
+
         <OrderSummary
-          game={service?.name ?? ""}
+          serviceName={service?.name ?? ""}
           userId={userId}
           serverId={serverId}
           product={selectedProduct}
+          paymentMethod={selectedMethod}
+          email={email}
+          whatsapp={whatsapp}
         />
       </div>
 
-      {/* BOTTOM BAR */}
+      {/* PAYMENT BAR */}
+
       <PaymentBar
-        slug={service?.slug ?? ""}
+        serviceName={service?.name ?? ""}
         userId={userId}
         serverId={serverId}
         product={selectedProduct}
+        paymentMethod={selectedMethod}
+        email={email}
+        whatsapp={whatsapp}
       />
     </main>
   );
