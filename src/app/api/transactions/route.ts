@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Transaction } from "@/types/transaction";
 
 import {
   createTransaction,
@@ -16,7 +17,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const body = await request.json();
+  const body = (await request.json()) as Transaction;
 
   const transaction = await createTransaction(body);
 

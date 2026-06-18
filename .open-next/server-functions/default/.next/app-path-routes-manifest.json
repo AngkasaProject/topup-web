@@ -1,0 +1,15 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/test-d1/route": "/api/test-d1",
+  "/api/transactions/[invoice]/route": "/api/transactions/[invoice]",
+  "/api/transactions/route": "/api/transactions",
+  "/cek-transaksi/page": "/cek-transaksi",
+  "/checkout/page": "/checkout",
+  "/favicon.ico/route": "/favicon.ico",
+  "/invoice/[invoice]/page": "/invoice/[invoice]",
+  "/kontak/page": "/kontak",
+  "/page": "/",
+  "/produk/[slug]/page": "/produk/[slug]",
+  "/tentang-kami/page": "/tentang-kami"
+}

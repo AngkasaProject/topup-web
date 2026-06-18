@@ -20,7 +20,7 @@ export default function InvoiceClient({ invoice }: { invoice: string }) {
       try {
         const response = await fetch(`/api/transactions/${invoice}`);
 
-        const result = await response.json();
+        const result: any = await response.json();
 
         if (result.success) {
           setTransaction(result.transaction);

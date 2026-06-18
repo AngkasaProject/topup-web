@@ -23,7 +23,7 @@ export default function TransactionSearch() {
 
       const response = await fetch(`/api/transactions/${invoice}`);
 
-      const data = await response.json();
+      const data: any = await response.json();
 
       if (!data.success) {
         setError("Transaksi tidak ditemukan");

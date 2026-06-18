@@ -82,7 +82,7 @@ export function PaymentBar({
         }),
       });
 
-      const result = await response.json();
+      const result: any = await response.json();
 
       if (!result.success) {
         alert("Gagal membuat transaksi");
