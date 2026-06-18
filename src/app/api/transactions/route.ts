@@ -1,6 +1,19 @@
 import { NextResponse } from "next/server";
 
-import { createTransaction } from "@/lib/db/transactions";
+import {
+  createTransaction,
+  getTransactions,
+  clearTransactions,
+} from "@/lib/db/transactions";
+
+export async function GET() {
+  const transactions = await getTransactions();
+
+  return NextResponse.json({
+    success: true,
+    transactions,
+  });
+}
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -10,5 +23,13 @@ export async function POST(request: Request) {
   return NextResponse.json({
     success: true,
     transaction,
+  });
+}
+
+export async function DELETE() {
+  await clearTransactions();
+
+  return NextResponse.json({
+    success: true,
   });
 }

@@ -112,7 +112,7 @@ export default function InvoiceClient({ invoice }: { invoice: string }) {
 
       {transaction.status === "PENDING" && (
         <div className="rounded-3xl border p-6">
-          <Countdown />
+          <Countdown createdAt={transaction.createdAt} />
         </div>
       )}
 

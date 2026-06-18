@@ -17,7 +17,7 @@ export interface Transaction {
 
   whatsapp: string;
 
-  status: "PENDING" | "PAID" | "FAILED";
+  status: "PENDING" | "PAID" | "FAILED" | "EXPIRED";
 
   createdAt: string;
 }

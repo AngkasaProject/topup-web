@@ -13,3 +13,11 @@ export async function getTransactionByInvoice(invoiceNumber: string) {
     transactions.find((item) => item.invoiceNumber === invoiceNumber) ?? null
   );
 }
+
+export async function getTransactions() {
+  return transactions;
+}
+
+export async function clearTransactions() {
+  transactions.length = 0;
+}

@@ -2,23 +2,34 @@
 
 import { useEffect, useState } from "react";
 
-export function Countdown() {
-  const [seconds, setSeconds] = useState(15 * 60);
+interface Props {
+  createdAt: string;
+}
+
+const EXPIRE_MINUTES = 15;
+
+export function Countdown({ createdAt }: Props) {
+  const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setSeconds((prev) => {
-        if (prev <= 0) {
-          clearInterval(timer);
-          return 0;
-        }
+    function calculateRemaining() {
+      const created = new Date(createdAt).getTime();
 
-        return prev - 1;
-      });
+      const expired = created + EXPIRE_MINUTES * 60 * 1000;
+
+      const remain = Math.floor((expired - Date.now()) / 1000);
+
+      return remain > 0 ? remain : 0;
+    }
+
+    setSeconds(calculateRemaining());
+
+    const timer = setInterval(() => {
+      setSeconds(calculateRemaining());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [createdAt]);
 
   const minutes = Math.floor(seconds / 60);
 
@@ -34,6 +45,12 @@ export function Countdown() {
         {String(minutes).padStart(2, "0")}:
         {String(remainSeconds).padStart(2, "0")}
       </div>
+
+      {seconds === 0 && (
+        <div className="mt-3 text-sm font-medium text-red-500">
+          Invoice telah kadaluarsa
+        </div>
+      )}
     </div>
   );
 }
