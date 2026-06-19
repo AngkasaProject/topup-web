@@ -1,5 +1,3 @@
-import { env } from "cloudflare:workers";
-
 export function getDB() {
-  return env.DB;
+  throw new Error("D1 belum dihubungkan");
 }

@@ -1,0 +1,64 @@
+CREATE TABLE categories (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  icon TEXT,
+  status INTEGER DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE services (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  category_id INTEGER NOT NULL,
+
+  slug TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+
+  logo TEXT,
+  banner TEXT,
+
+  status INTEGER DEFAULT 1,
+
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY(category_id)
+    REFERENCES categories(id)
+);
+
+CREATE TABLE products (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  service_id INTEGER NOT NULL,
+
+  code TEXT NOT NULL,
+
+  name TEXT NOT NULL,
+
+  cost_price INTEGER DEFAULT 0,
+  sell_price INTEGER DEFAULT 0,
+
+  status INTEGER DEFAULT 1,
+
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY(service_id)
+    REFERENCES services(id)
+);
+
+CREATE TABLE transactions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  invoice TEXT UNIQUE NOT NULL,
+
+  service_name TEXT NOT NULL,
+  product_name TEXT NOT NULL,
+
+  customer_id TEXT,
+
+  amount INTEGER NOT NULL,
+
+  status TEXT DEFAULT 'pending',
+
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

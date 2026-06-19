@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { Navbar } from "@/components/layout/navbar";
+export const metadata: Metadata = {
+  title: "AGKS Online",
+  description: "Topup Game Murah & Cepat",
+};
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="id">
-      <body>
-        <Navbar />
-
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
