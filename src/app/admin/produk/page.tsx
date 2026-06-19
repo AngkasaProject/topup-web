@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getServices } from "@/lib/db/services";
 import { Plus } from "lucide-react";
+export const dynamic = "force-dynamic";
 
 export default async function ProdukPage() {
   const games = await getServices();
