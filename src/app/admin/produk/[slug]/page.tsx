@@ -2,7 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Switch } from "@/components/ui/switch";
 
-import { products } from "@/data/products";
+import { getServiceBySlug } from "@/lib/db/services";
+import { getProductsByService } from "@/lib/db/products";
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{
@@ -13,11 +16,13 @@ interface PageProps {
 export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const items = products[slug as keyof typeof products];
+  const service = await getServiceBySlug(slug);
 
-  if (!items) {
+  if (!service) {
     notFound();
   }
+
+  const products = await getProductsByService(Number(service.id));
 
   return (
     <div className="space-y-6">
@@ -26,64 +31,94 @@ export default async function ProductDetailPage({ params }: PageProps) {
           ← Kembali ke Produk
         </Link>
 
-        <h1 className="mt-2 text-3xl font-bold">
-          {slug.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-        </h1>
+        <h1 className="mt-2 text-3xl font-bold">{String(service.name)}</h1>
 
         <p className="text-muted-foreground">Kelola nominal produk</p>
+      </div>
+
+      <div className="rounded-xl border bg-background p-4">
+        <h2 className="mb-4 font-semibold">Markup Massal</h2>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="mb-1 block text-sm">Markup (Rp)</label>
+
+            <input
+              type="number"
+              placeholder="1500"
+              className="w-full rounded-lg border px-3 py-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm">Harga Coret (%)</label>
+
+            <input
+              type="number"
+              placeholder="10"
+              className="w-full rounded-lg border px-3 py-2"
+            />
+          </div>
+        </div>
+
+        <button className="mt-4 rounded-lg border px-4 py-2 text-sm font-medium">
+          Terapkan ke Semua Produk
+        </button>
       </div>
 
       <div className="rounded-xl border bg-background overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b bg-muted/50">
-              <th className="p-4 text-left">Kode</th>
-
               <th className="p-4 text-left">Produk</th>
 
               <th className="p-4 text-left">Modal</th>
 
-              <th className="p-4 text-left">Jual</th>
+              <th className="p-4 text-left">Harga Jual</th>
 
-              <th className="p-4 text-left">Margin</th>
+              <th className="p-4 text-left">Harga Coret</th>
 
               <th className="p-4 text-left">Status</th>
             </tr>
           </thead>
 
           <tbody>
-            {items.map((item) => {
-              const modal = Math.round(item.price * 0.9);
-
-              const margin = item.price - modal;
+            {products.map((product: any) => {
+              const margin =
+                Number(product.sell_price) - Number(product.cost_price);
 
               return (
-                <tr key={item.id} className="border-b">
-                  <td className="p-4">ML{item.id}</td>
-
-                  <td className="p-4">{item.name}</td>
+                <tr key={product.id} className="border-b">
+                  <td className="p-4 font-medium">{product.name}</td>
 
                   <td className="p-4">
-                    Rp
-                    {modal.toLocaleString("id-ID")}
-                  </td>
-
-                  <td className="p-4 font-medium">
-                    Rp
-                    {item.price.toLocaleString("id-ID")}
-                  </td>
-
-                  <td className="p-4 text-green-600">
-                    Rp
-                    {margin.toLocaleString("id-ID")}
+                    Rp {Number(product.cost_price).toLocaleString("id-ID")}
                   </td>
 
                   <td className="p-4">
-                    <Switch defaultChecked />
+                    <div>
+                      <input
+                        type="number"
+                        defaultValue={product.sell_price}
+                        className="w-28 rounded border px-2 py-1"
+                      />
+
+                      <div className="mt-1 text-xs text-green-600">
+                        + Rp {margin.toLocaleString("id-ID")}
+                      </div>
+                    </div>
                   </td>
 
                   <td className="p-4">
-                    <button className="text-blue-600">Edit</button>
+                    <input
+                      type="number"
+                      defaultValue={product.original_price ?? 0}
+                      className="w-28 rounded border px-2 py-1"
+                    />
+                  </td>
+
+                  <td className="p-4">
+                    <Switch defaultChecked={product.status === 1} />
                   </td>
                 </tr>
               );
