@@ -10,7 +10,6 @@ export async function getServices(): Promise<Service[]> {
     `
     SELECT *
     FROM services
-    WHERE status = 1
     ORDER BY name
     `,
   ).all();
@@ -35,4 +34,22 @@ export async function getServiceBySlug(slug: string): Promise<Service | null> {
     .first();
 
   return result as Service | null;
+}
+export async function getServicesByCategory(categoryId: number) {
+  const { env } = await getCloudflareContext({
+    async: true,
+  });
+
+  const result = await env.DB.prepare(
+    `
+    SELECT *
+    FROM services
+    WHERE category_id = ?
+    ORDER BY name
+    `,
+  )
+    .bind(categoryId)
+    .all();
+
+  return result.results;
 }
