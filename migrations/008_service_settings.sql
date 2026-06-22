@@ -1,0 +1,13 @@
+CREATE TABLE service_settings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  service_id INTEGER NOT NULL UNIQUE,
+
+  markup INTEGER NOT NULL DEFAULT 0,
+
+  discount_percent INTEGER NOT NULL DEFAULT 0,
+
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (service_id) REFERENCES services(id)
+);

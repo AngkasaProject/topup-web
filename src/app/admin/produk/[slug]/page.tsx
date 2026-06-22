@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Switch } from "@/components/ui/switch";
+import { ProductRow } from "@/components/admin/product-row";
+import { MarkupForm } from "@/components/admin/markup-form";
+import { getServiceSettings } from "@/lib/db/service-settings";
 
 import { getServiceBySlug } from "@/lib/db/services";
 import { getProductsByService } from "@/lib/db/products";
@@ -24,6 +26,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
   const products = await getProductsByService(Number(service.id));
 
+  const settings = await getServiceSettings(Number(service.id));
+
   return (
     <div className="space-y-6">
       <div>
@@ -36,38 +40,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <p className="text-muted-foreground">Kelola nominal produk</p>
       </div>
 
-      <div className="rounded-xl border bg-background p-4">
-        <h2 className="mb-4 font-semibold">Markup Massal</h2>
+      <MarkupForm
+        slug={slug}
+        serviceId={Number(service.id)}
+        initialMarkup={Number(settings?.markup ?? 1500)}
+        initialDiscountPercent={Number(settings?.discount_percent ?? 10)}
+      />
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-sm">Markup (Rp)</label>
-
-            <input
-              type="number"
-              placeholder="1500"
-              className="w-full rounded-lg border px-3 py-2"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm">Harga Coret (%)</label>
-
-            <input
-              type="number"
-              placeholder="10"
-              className="w-full rounded-lg border px-3 py-2"
-            />
-          </div>
-        </div>
-
-        <button className="mt-4 rounded-lg border px-4 py-2 text-sm font-medium">
-          Terapkan ke Semua Produk
-        </button>
-      </div>
-
-      <div className="rounded-xl border bg-background overflow-hidden">
-        <table className="w-full">
+      <div className="rounded-xl border bg-background overflow-x-auto">
+        <table className="w-full min-w-[900px]">
           <thead>
             <tr className="border-b bg-muted/50">
               <th className="p-4 text-left">Produk</th>
@@ -79,50 +60,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <th className="p-4 text-left">Harga Coret</th>
 
               <th className="p-4 text-left">Status</th>
+
+              <th className="p-4 text-left">Aksi</th>
             </tr>
           </thead>
 
           <tbody>
-            {products.map((product: any) => {
-              const margin =
-                Number(product.sell_price) - Number(product.cost_price);
-
-              return (
-                <tr key={product.id} className="border-b">
-                  <td className="p-4 font-medium">{product.name}</td>
-
-                  <td className="p-4">
-                    Rp {Number(product.cost_price).toLocaleString("id-ID")}
-                  </td>
-
-                  <td className="p-4">
-                    <div>
-                      <input
-                        type="number"
-                        defaultValue={product.sell_price}
-                        className="w-28 rounded border px-2 py-1"
-                      />
-
-                      <div className="mt-1 text-xs text-green-600">
-                        + Rp {margin.toLocaleString("id-ID")}
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="p-4">
-                    <input
-                      type="number"
-                      defaultValue={product.original_price ?? 0}
-                      className="w-28 rounded border px-2 py-1"
-                    />
-                  </td>
-
-                  <td className="p-4">
-                    <Switch defaultChecked={product.status === 1} />
-                  </td>
-                </tr>
-              );
-            })}
+            {products.map((product: any) => (
+              <ProductRow key={product.id} product={product} />
+            ))}
           </tbody>
         </table>
       </div>
