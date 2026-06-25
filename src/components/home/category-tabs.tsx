@@ -1,19 +1,23 @@
-import { categories } from "@/data/categories";
+import type { Category } from "@/types/database";
 
-export function CategoryTabs() {
+interface CategoryTabsProps {
+  categories: Category[];
+}
+
+export function CategoryTabs({ categories }: CategoryTabsProps) {
   return (
     <section className="mt-8">
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
         {categories.map((item) => (
           <a
-            key={item.slug}
+            key={item.id}
             href={`#${item.slug}`}
             className="
+              whitespace-nowrap
               rounded-full
               border
               px-5
               py-2
-              whitespace-nowrap
               transition
               hover:bg-orange-500
               hover:text-white

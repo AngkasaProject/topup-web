@@ -1,20 +1,19 @@
 import Link from "next/link";
-import { services } from "@/data/services";
+
+import type { Category, Service } from "@/types/database";
 
 interface Props {
-  category: string;
-  title: string;
+  category: Category;
+  services: Service[];
 }
 
-export function CategorySection({ category, title }: Props) {
-  const items = services
-    .filter((service) => service.category === category)
-    .slice(0, 8);
+export function CategorySection({ category, services }: Props) {
+  const items = services.slice(0, 8);
 
   return (
-    <section id={category} className="mt-12">
+    <section id={category.slug} className="mt-12">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">{title}</h2>
+        <h2 className="text-2xl font-bold">{category.name}</h2>
 
         <button className="text-sm text-orange-500">Lihat Semua</button>
       </div>
@@ -40,11 +39,20 @@ export function CategorySection({ category, title }: Props) {
                 h-20
                 items-center
                 justify-center
+                overflow-hidden
                 rounded-xl
                 bg-orange-100
               "
             >
-              {item.name}
+              {item.logo ? (
+                <img
+                  src={item.logo}
+                  alt={item.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="font-semibold">{item.name}</span>
+              )}
             </div>
 
             <div className="font-medium">{item.name}</div>

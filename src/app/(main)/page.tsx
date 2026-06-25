@@ -2,16 +2,25 @@ import { Footer } from "@/components/layout/footer";
 
 import { SearchBar } from "@/components/home/search-bar";
 import { Hero } from "@/components/home/hero";
-import { BannerSlider } from "@/components/home/banner-slider";
 import { FlashSale } from "@/components/home/flash-sale";
 import { Categories } from "@/components/home/categories";
 import { ProductGrid } from "@/components/home/product-grid";
 import { Features } from "@/components/home/features";
 import { Stats } from "@/components/home/stats";
+
 import { CategoryTabs } from "@/components/home/category-tabs";
 import { CategorySection } from "@/components/home/category-section";
 
-export default function HomePage() {
+import { getCategories } from "@/lib/db/categories";
+import { getServices } from "@/lib/db/services";
+
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const categories = await getCategories();
+
+  const services = await getServices();
+
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 py-6">
@@ -23,15 +32,19 @@ export default function HomePage() {
 
         <Categories />
 
-        <CategoryTabs />
+        <ProductGrid services={services.slice(0, 8)} />
 
-        <CategorySection category="game" title="Game" />
+        <CategoryTabs categories={categories} />
 
-        <CategorySection category="pulsa" title="Pulsa" />
-
-        <CategorySection category="voucher" title="Voucher" />
-
-        <CategorySection category="token" title="Token PLN" />
+        {categories.map((category) => (
+          <CategorySection
+            key={category.id}
+            category={category}
+            services={services.filter(
+              (service) => service.category_id === category.id,
+            )}
+          />
+        ))}
 
         <Features />
 

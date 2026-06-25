@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 
 import { ProductList } from "@/components/admin/product-list";
-
+import { Switch } from "@/components/ui/switch";
 import { getCategories } from "@/lib/db/categories";
 import { getServices } from "@/lib/db/services";
 

@@ -1,19 +1,19 @@
 export interface Service {
   id: number;
 
+  category_id: number;
+
   slug: string;
 
   name: string;
 
-  category: string;
+  logo: string | null;
 
-  inputType: string;
+  banner: string | null;
 
-  logo: string;
+  description: string | null;
 
-  banner: string;
+  input_type: string;
 
-  description: string;
-
-  badges: readonly string[];
+  status: number;
 }

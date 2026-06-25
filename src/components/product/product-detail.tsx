@@ -13,9 +13,16 @@ import { Service } from "@/types/service";
 interface ProductDetailProps {
   service: Service | undefined;
   products: Product[];
+  paymentMethods: PaymentMethod[];
 }
 
-export function ProductDetail({ service, products }: ProductDetailProps) {
+import type { PaymentMethod } from "@/types/database";
+
+export function ProductDetail({
+  service,
+  products,
+  paymentMethods,
+}: ProductDetailProps) {
   const [userId, setUserId] = useState("");
   const [serverId, setServerId] = useState("");
 
@@ -59,24 +66,6 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
 
             <div>
               <h1 className="text-3xl font-bold">{service?.name}</h1>
-
-              <div className="mt-2 flex flex-wrap gap-2">
-                {service?.badges?.map((badge) => (
-                  <span
-                    key={badge}
-                    className="
-                        rounded-full
-                        bg-orange-100
-                        px-3
-                        py-1
-                        text-sm
-                        text-orange-600
-                      "
-                  >
-                    {badge}
-                  </span>
-                ))}
-              </div>
             </div>
           </div>
 
@@ -93,7 +82,7 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
           <div className="rounded-2xl border p-6">
             <h2 className="mb-4 text-xl font-semibold">1. Data Tujuan</h2>
 
-            {service?.inputType === "userid-server" && (
+            {service?.input_type === "userid-server" && (
               <>
                 <input
                   value={userId}
@@ -122,7 +111,7 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
               </>
             )}
 
-            {service?.inputType === "userid" && (
+            {service?.input_type === "userid" && (
               <input
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
@@ -136,7 +125,7 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
               />
             )}
 
-            {service?.inputType === "phone" && (
+            {service?.input_type === "phone" && (
               <input
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
@@ -150,7 +139,7 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
               />
             )}
 
-            {service?.inputType === "customer-id" && (
+            {service?.input_type === "customer-id" && (
               <input
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
@@ -202,6 +191,7 @@ export function ProductDetail({ service, products }: ProductDetailProps) {
           {/* STEP 3 */}
 
           <PaymentMethods
+            paymentMethods={paymentMethods}
             selectedMethod={selectedMethod}
             onSelect={setSelectedMethod}
           />
